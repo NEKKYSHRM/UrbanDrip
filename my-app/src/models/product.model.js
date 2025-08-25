@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "@/models/user.model.js"
+import User from "@/models/user.model.js";
 
 const productSchema = mongoose.Schema(
   {
@@ -31,7 +31,7 @@ const productSchema = mongoose.Schema(
     ],
     images: [
       {
-        url: { type: String, required: true },
+        type: String, required: true,
       },
     ],
     stock: {
@@ -46,3 +46,6 @@ const productSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+export const Product =
+  mongoose.model.Product || mongoose.model("Product", productSchema);
