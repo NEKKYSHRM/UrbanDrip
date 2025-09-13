@@ -28,7 +28,7 @@ export default function page({ solid = false, mode = "signup" }) {
 
   return (
     <div
-      className={`w-full z-50 fixed text-white py-4 px-20 flex justify-between items-center transition-colors duration-300 ${
+      className={`w-full z-50 fixed text-white py-1 px-20 flex justify-between items-center transition-colors duration-300 ${
         isSolid ? "bg-[#ADFF2F]" : "bg-transparent"
       }`}
     >
@@ -37,11 +37,32 @@ export default function page({ solid = false, mode = "signup" }) {
       </div>
       <div>
         <ul className="flex gap-10 text-lg items-center">
-          <li className="hover:text-[#ADFF2F] cursor-pointer">HOME</li>
-          <li className="hover:text-[#ADFF2F] cursor-pointer">SHOP</li>
-          <li className="hover:text-[#ADFF2F] cursor-pointer">ABOUT</li>
-          <li className="hover:text-[#ADFF2F] cursor-pointer">CONTACT</li>
-          <li className="hover:text-[#ADFF2F] cursor-pointer">
+          <li
+            className={`cursor-pointer hover:${
+              isSolid ? "text-black" : "text-[#ADFF2F]"
+            }`}
+          >
+            HOME
+          </li>
+          <li className={`cursor-pointer hover:${
+              isSolid ? "text-black" : "text-[#ADFF2F]"
+            }`}>SHOP</li>
+          <li className={`cursor-pointer hover:${
+              isSolid ? "text-black" : "text-[#ADFF2F]"
+            }`}>
+            <a
+              href={`/AboutUs`}
+              className="py-0.5 px-3 cursor-pointer hover:border-[#ADFF2F]"
+            >
+              ABOUT
+            </a>
+          </li>
+          <li className={`cursor-pointer hover:${
+              isSolid ? "text-black" : "text-[#ADFF2F]"
+            }`}>CONTACT</li>
+          <li className={`cursor-pointer hover:${
+              isSolid ? "text-black" : "text-[#ADFF2F]"
+            }`}>
             {session ? (
               session.user.role === "customer" ? (
                 <a

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -57,6 +57,44 @@ export default function page() {
       alert("Error adding product");
     }
   };
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get("/api/product");
+        if (res.data.success) {
+          setProducts(res.data.products); // ✅ fix
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Error fetching products");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const deleteProduct = async (id) => {
+  if (!confirm("Are you sure you want to delete this product?")) return;
+
+  try {
+    const res = await axios.delete(`/api/product/${id}`);
+    if (res.data.success) {
+      alert("Product deleted successfully");
+      setProducts((prev) => prev.filter((p) => p._id !== id)); // update UI
+    } else {
+      alert(res.data.message || "Failed to delete");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error deleting product");
+  }
+};
 
   return (
     <>
@@ -213,9 +251,9 @@ export default function page() {
 
       <div className="w-full bg-[#0A0A0A] grid grid-cols-[20%_80%] h-screen">
         <MenuBar />
-        <div className="w-4/5 p-12 flex flex-col">
+        <div className="w-full p-12 flex flex-col">
           <div className="flex items-center justify-between">
-            <div className="text-gray-800 text-xl font-semibold ">
+            <div className="text-gray-300 text-xl font-semibold ">
               Admin | Dashboard
             </div>
             <button
@@ -225,76 +263,78 @@ export default function page() {
               Add Product
             </button>
           </div>
-          <div className="py-6 px-0">
-            {/* <table className="w-full table-auto border-collapse text-sm">
+          <div className="py-6 px-0 w-full overflow-x-auto">
+            <table className="w-full table-auto border-collapse text-sm">
               <thead className="bg-white">
                 <tr>
                   {[
-                    "Company",
-                    "Price Band",
-                    "Open",
-                    "Close",
-                    "Issue Size",
-                    "Issue Type",
-                    "Listing Date",
-                    "Status",
-                    "Action",
-                    "Delete/View",
+                    "Name",
+                    "Description",
+                    "Price",
+                    "Category",
+                    "Sizes",
+                    "Image",
+                    "Stock",
+                    "Actions",
                   ].map((h, idx) => (
-                    <th key={idx} className="p-2 text-left">
+                    <th key={idx} className="p-2 text-left text-black">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {ipos.map((ipo, idx) => (
-                  <tr key={idx} className="even:bg-gray-100 py-2">
-                    <td className="p-2 ">{ipo.companyName}</td>
-                    <td className="p-2 ">₹ {ipo.priceBand}</td>
-                    <td className="p-2 ">{ipo.open?.slice(0, 10)}</td>
-                    <td className="p-2 ">{ipo.close?.slice(0, 10)}</td>
-                    <td className="p-2 ">{ipo.issueSize}</td>
-                    <td className="p-2 ">{ipo.issueType}</td>
-                    <td className="p-2 ">{ipo.listingDate?.slice(0, 10)}</td>
-                    <td className="p-2 ">
-                      <span
-                        className={`px-2 py-1 rounded-xl text-xs font-medium
-                  ${
-                    ipo.status === "Open"
-                      ? "bg-green-50 border-2 text-green-700"
-                      : ipo.status === "Close"
-                      ? "bg-red-50 border-2 text-red-700"
-                      : ipo.status === "Listed"
-                      ? "bg-blue-50 border-2 text-blue-700"
-                      : "bg-yellow-50 border-2 text-yellow-700"
-                  }`}
-                      >
-                        {ipo.status}
-                      </span>
-                    </td>
-                    <td className="p-2">
-                      <button className="bg-blue-700 text-white px-3 py-1 rounded-md">
-                        <Link to={`/ipoInfo/${ipo._id}`}>Update</Link>
-                      </button>
-                    </td>
-                    <td className="p-2 flex items-center gap-2">
-                      <button
-                        onClick={() => deleteIpo(ipo._id)}
-                        className="text-red-600 cursor-pointer"
-                      >
-                        <RiDeleteBinLine className="text-2xl" />
-                      </button>
-                      <button className="text-black">
-                        <Link to={`/ipoInfo/${ipo._id}`}>
-                          <FiEye className="text-2xl" />
-                        </Link>
-                      </button>
+                {loading ? (
+                  <tr>
+                    <td colSpan="8" className="p-4 text-center text-white">
+                      Loading...
                     </td>
                   </tr>
-                ))}
+                ) : products.length === 0 ? (
+                  <tr>
+                    <td colSpan="8" className="p-4 text-center text-white">
+                      No products found.
+                    </td>
+                  </tr>
+                ) : (
+                  products.map((item, idx) => (
+                    <tr key={idx} className="bg-gray-800 even:bg-gray-600 text-white">
+                      <td className="p-2">{item.name}</td>
+                      <td className="p-2">{item.description}</td>
+                      <td className="p-2">₹ {item.price}</td>
+                      <td className="p-2">{item.category}</td>
+                      <td className="p-2">{item.sizes.join(", ")}</td>
+                      <td className="p-2">
+                        {item.images?.length > 0 ? (
+                          <img
+                            src={item.images[0]}
+                            alt={item.name}
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                        ) : (
+                          "No image"
+                        )}
+                      </td>
+                      <td className="p-2">{item.stock}</td>
+                      <td className="p-2 flex gap-2">
+                        {/* Update */}
+                        <button className="bg-blue-700 text-white px-3 py-1 rounded-md">
+                          <Link href={`/products/${item._id}`}>Update</Link>
+                        </button>
+
+                        {/* Delete */}
+                        <button
+                          onClick={() => deleteProduct(item._id)}
+                          className="bg-red-600 cursor-pointer text-white px-3 py-1 rounded-md"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
-            </table> */}
+            </table>
           </div>
         </div>
       </div>

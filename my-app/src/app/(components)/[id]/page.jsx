@@ -1,14 +1,10 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { GoHomeFill } from "react-icons/go";
-import { AiFillShopping } from "react-icons/ai";
-import { FaHistory } from "react-icons/fa";
-import { FaShoppingCart } from "react-icons/fa";
-import { MdAccountCircle } from "react-icons/md";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import UserMenuBar from "@/components/UserMenuBar/page.jsx";
 
 export default function page() {
   const { data: session } = useSession();
@@ -36,40 +32,7 @@ export default function page() {
 
   return (
     <div className="w-full bg-[#0A0A0A] grid grid-cols-[25%_75%] h-screen">
-      <div className="flex flex-col py-8 px-8 w-full">
-        <div>
-          <h2 className="text-4xl text-white">URBAN DRIP</h2>
-        </div>
-        <ul className="py-6 flex flex-col">
-          <a
-            href="/"
-            className="flex items-center gap-2 text-white text-lg p-4 hover:bg-gray-800 cursor-pointer"
-          >
-            <GoHomeFill />
-            <span>Home</span>
-          </a>
-          <li className="flex items-center gap-2 text-white text-lg p-4 hover:bg-gray-800 cursor-pointer">
-            <AiFillShopping />
-            <span>Shop</span>
-          </li>
-          <li className="flex items-center gap-2 text-white text-lg p-4 hover:bg-gray-800 cursor-pointer">
-            <FaShoppingCart />
-            <span>My Cart</span>
-          </li>
-          <li className="flex items-center gap-2 text-white text-lg p-4 hover:bg-gray-800 cursor-pointer">
-            <FaHistory />
-            <span>Order History</span>
-          </li>
-          <li className="flex items-center gap-2 text-white text-lg p-4 hover:bg-gray-800 cursor-pointer">
-            <MdAccountCircle />
-            <span>Account</span>
-          </li>
-          <button onClick={() => (signOut({callbackUrl: "/"}))} className="flex items-center gap-2 text-white text-lg p-4 hover:bg-gray-800 cursor-pointer">
-            <MdAccountCircle />
-            <span>Logout</span>
-          </button>
-        </ul>
-      </div>
+      <UserMenuBar/>
       <div className="px-10 flex flex-col items-center">
         <div className="bg-[#1C1C1C] w-full flex flex-col m-auto items-center p-8 rounded-md shadow shadow-gray-800">
           <div className="flex items-center gap-12">

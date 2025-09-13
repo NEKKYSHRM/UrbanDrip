@@ -6,6 +6,14 @@ const nextConfig = {images: {
         protocol: 'https',
         hostname: 'api.dicebear.com',
       },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com", // ✅ allow Pexels images
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+      },
     ],
   },
 };
