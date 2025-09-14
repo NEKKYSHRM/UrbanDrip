@@ -8,7 +8,10 @@ import { useCart } from "@/context/CartContext.js";
 import toast from "react-hot-toast";
 
 export default function ProductCard({ product }) {
-  const { addToCart } = useCart();
+
+    if(!product) return null;
+    
+   const { addToCart } = useCart();
 
   const handleAdd = () => {
     addToCart(product);
@@ -63,8 +66,10 @@ export default function ProductCard({ product }) {
             <FiEye /> View
           </button>
         </Link>
-        <button 
-        onClick={handleAdd} className="flex items-center gap-1 bg-[#ADFF2F] hover:bg-[#CCFF00] text-black px-3 py-1 rounded-lg  transition cursor-pointer">
+        <button
+          onClick={handleAdd}
+          className="flex items-center gap-1 bg-[#ADFF2F] hover:bg-[#CCFF00] text-black px-3 py-1 rounded-lg  transition cursor-pointer"
+        >
           <ShoppingCart size={18} /> Add
         </button>
       </div>

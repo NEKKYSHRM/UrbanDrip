@@ -4,7 +4,7 @@ import React from "react";
 import axios from "axios";
 import Image from "next/image";
 import Header from "@/components/Header/page.jsx";
-import ProductCard from "./(components)/ProductCard/page.jsx"; // ✅ import properly
+import ProductCard from "@/components/ProductCard.jsx"; // ✅ import properly
 
 export default function Home() {
   const [products, setProducts] = React.useState([]);

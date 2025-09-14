@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { FiEye } from "react-icons/fi";
 import toast from "react-hot-toast";
+// import ProductCard from "@/components/ProductCard.jsx";
 
 export default function ShopPage() {
   const [products, setProducts] = useState([]);
